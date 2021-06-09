@@ -1,20 +1,27 @@
+import telebot
 import config
-import logging
 
-from aiogram import Bot, Dispatcher, executor, types
+bot = telebot.TeleBot(config.TOKEN)
 
-#log level
-logging.basicConfig(Level=logging.INFO)
+@bot.message_handler(commands=['start'])
+def start_message(message):
+	chatId = message.chat.id
+	text = message.text.lower
+	bot.send_message(chatId, "теперь тут терри прачетт")
 
-#bot init
-bot = Bot(token=config.TOKEN)
-dp = Dispatcher(bot)
+@bot.message_handler(content_types=['text'])
+def send_message(message):
+	chatId = message.chat.id
+	text = message.text.lower()
+	print(text)
+	if text == "лови терри прачетта":
+		bot.send_message(chatId, "поймал!")
+	elif text == "не люблю терри прачетта":
+		bot.send_message(chatId, "лох")
+	elif text == "терри прачетт":
+		p = open('C:\\Users\\sofya\\OneDrive\\Desktop\\tp.jpg', 'rb')
+		bot.send_photo(chatId, 'https://fanzon-portal.ru/upload/iblock/0d6/0d67d869276134d7d5ffb4d1b17d5a2e.jpg')
+	elif text == "че":
+		bot.send_message(chatId, "терри прачетт")
 
-#echo
-@dp.message_handler()
-async def echo(message: types.Message):
-	await message.answer(message.text)
-
-#run long-polling
-if __name__ == "__main__":
-	executor.start_polling(dp, skip_updates=True)
+bot.polling()
